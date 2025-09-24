@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
+import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -107,30 +108,24 @@ export function UploadExtrato({ onUploadComplete, className }: UploadExtratoProp
     reader.readAsText(file)
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (!selectedFile) return
 
     setIsUploading(true)
     setUploadProgress(0)
-
-    // Simulando upload com progresso
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setIsUploading(false)
-          setUploadSuccess(true)
-
-          // Notificar o componente pai que o upload foi concluído
-          if (onUploadComplete && filePreview) {
-            onUploadComplete(filePreview)
-          }
-
-          return 100
-        }
-        return prev + 5
-      })
-    }, 150)
+    try {
+      // barra de progresso fake enquanto envia
+      const interval = setInterval(() => setUploadProgress((p) => Math.min(95, p + 5)), 150)
+      const res = await api.uploadExtrato(selectedFile)
+      clearInterval(interval)
+      setUploadProgress(100)
+      setIsUploading(false)
+      setUploadSuccess(true)
+      if (onUploadComplete) onUploadComplete(res)
+    } catch (e) {
+      setIsUploading(false)
+      setFileError('Falha no upload. Tente novamente.')
+    }
   }
 
   const downloadExample = () => {

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { api } from "@/lib/api"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,6 +46,7 @@ import { LoadingIndicator } from "@/components/ui/loading-indicator"
 import { SkeletonCard } from "@/components/ui/skeleton-card"
 import { RedeFinanceiraVisualizer } from "@/components/rede-financeira-visualizer"
 import { RedeFinanceiraDetalhes } from "@/components/rede-financeira-detalhes"
+import { NetworkData, NetworkMetrics, NetworkAlert } from "@/types"
 
 // Dados simulados para a rede
 const networkDataSimulado = {
@@ -158,50 +160,65 @@ export default function AnaliseRedePage() {
   const [isRealTime, setIsRealTime] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(100)
   const [showSidebar, setShowSidebar] = useState(true)
-  const [dataRefreshInterval, setDataRefreshInterval] = useState(null)
-  const [networkData, setNetworkData] = useState(null)
+  const [dataRefreshInterval, setDataRefreshInterval] = useState<NodeJS.Timeout | null>(null)
+  const [networkData, setNetworkData] = useState<NetworkData | null>(null)
   const [filterLevel, setFilterLevel] = useState(50)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedNode, setSelectedNode] = useState(null)
+  const [selectedNode, setSelectedNode] = useState<any>(null)
   const [showLabels, setShowLabels] = useState(true)
   const [rotation, setRotation] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [alertsVisible, setAlertsVisible] = useState(true)
-  const [riskAlerts, setRiskAlerts] = useState([])
-  const [snaMetrics, setSnaMetrics] = useState(null)
+  const [riskAlerts, setRiskAlerts] = useState<NetworkAlert[]>([])
+  const [snaMetrics, setSnaMetrics] = useState<NetworkMetrics | null>(null)
 
-  // Simulated data loading
+  // Fetch data from backend mock
   useEffect(() => {
+    let mounted = true
     setIsLoading(true)
-
-    const timer = setTimeout(() => {
-      // Convert the data format to match what the visualizer expects
-      const formattedData = {
-        nodes: generateNetworkData().nodes.map((node) => ({
-          id: node.id,
-          label: node.name,
-          type: node.type,
-          value: node.value,
-          riskScore: Math.random(),
-          centrality: Math.random(),
-        })),
-        edges: generateNetworkData().links.map((link) => ({
-          from: link.source,
-          to: link.target,
-          value: link.value,
-          label: `R$ ${(link.value / 1000).toFixed(0)}k`,
-          type: link.type,
-          riskScore: link.riskScore,
-        })),
+    ;(async () => {
+      try {
+        const [metrics, graph] = await Promise.all([
+          api.getAnaliseRedeMetrics(),
+          api.getAnaliseRedeGraph()
+        ])
+        if (!mounted) return
+        const formatted = {
+          nodes: graph.nodes.map((n) => ({
+            id: n.id,
+            label: n.label,
+            type: n.group,
+            value: n.value ?? Math.random() * 100000,
+            riskScore: Math.random(),
+            centrality: Math.random()
+          })),
+          edges: graph.edges.map((e) => ({
+            from: e.source,
+            to: e.target,
+            value: (e.weight ?? 1) * 1000,
+            label: `R$ ${((e.weight ?? 1) * 1).toFixed(0)}k`,
+            type: 'relacao',
+            riskScore: Math.random()
+          }))
+        }
+        setNetworkData(formatted)
+        setSnaMetrics({
+          centrality: { degree: metrics.avgDegree * 10, betweenness: 50, closeness: 45, eigenvector: 40 },
+          cohesion: { density: metrics.density * 100, transitivity: metrics.clusteringCoeff * 100, reciprocity: 60 },
+          modularity: { clusters: 3, modularity: 42, communities: 2 },
+          resilience: { robustness: 65, vulnerability: 35, stability: 70 }
+        })
+        setRiskAlerts(generateRiskAlerts())
+      } catch {
+        // fallback em caso de erro
+        setNetworkData(generateNetworkData())
+        setSnaMetrics(generateSnaMetrics())
+        setRiskAlerts(generateRiskAlerts())
+      } finally {
+        if (mounted) setIsLoading(false)
       }
-
-      setNetworkData(formattedData)
-      setSnaMetrics(generateSnaMetrics())
-      setRiskAlerts(generateRiskAlerts())
-      setIsLoading(false)
-    }, 1500)
-
-    return () => clearTimeout(timer)
+    })()
+    return () => { mounted = false }
   }, [period])
 
   // Real-time data updates

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -99,13 +100,19 @@ const estagioData = {
 
 export default function ClassificacaoPage() {
   const [isLoading, setIsLoading] = useState(true)
+  const [status, setStatus] = useState<{ estagio: string; score: number; recomendacoes: string[] } | null>(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-
-    return () => clearTimeout(timer)
+    let mounted = true
+    ;(async () => {
+      try {
+        const s = await api.getClassificacaoStatus()
+        if (mounted) setStatus(s)
+      } finally {
+        if (mounted) setIsLoading(false)
+      }
+    })()
+    return () => { mounted = false }
   }, [])
 
   const getEstagioColor = (estagio) => {
@@ -185,11 +192,11 @@ export default function ClassificacaoPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex flex-col items-center justify-center text-center">
-                <Badge className={`text-lg py-1.5 px-4 ${getEstagioBgColor(estagioData.atual)}`}>
-                  {estagioData.atual}
+                <Badge className={`text-lg py-1.5 px-4 ${getEstagioBgColor(status?.estagio || estagioData.atual)}`}>
+                  {status?.estagio || estagioData.atual}
                 </Badge>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Sua empresa está na fase de <span className="font-medium">{estagioData.atual}</span>, caracterizada
+                  Sua empresa está na fase de <span className="font-medium">{status?.estagio || estagioData.atual}</span>, caracterizada
                   por crescimento acelerado e expansão de mercado.
                 </p>
               </div>
@@ -220,7 +227,7 @@ export default function ClassificacaoPage() {
                 <div>
                   <h3 className="text-sm font-medium mb-2">Características do Estágio Atual</h3>
                   <ul className="space-y-1">
-                    {estagioData.caracteristicas.expansao.map((caracteristica, index) => (
+                    {(status?.estagio === 'Expansão' ? estagioData.caracteristicas.expansao : estagioData.caracteristicas.inicio).map((caracteristica, index) => (
                       <li key={index} className="flex items-center gap-2 text-sm">
                         <CheckCircle className="h-4 w-4 text-green-500" />
                         {caracteristica}

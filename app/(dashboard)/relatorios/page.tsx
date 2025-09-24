@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -84,50 +85,37 @@ export default function RelatoriosPage() {
     }, 1500)
   }
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = async () => {
     setIsGenerating(true)
     setExportProgress(0)
-
-    // Simulando o progresso da geração do relatório
-    const interval = setInterval(() => {
-      setExportProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setIsGenerating(false)
-          setShowSuccess(true)
-
-          // Fechar a mensagem de sucesso após 3 segundos
-          setTimeout(() => {
-            setShowSuccess(false)
-          }, 3000)
-          return 100
-        }
-        return prev + 10
-      })
-    }, 300)
+    try {
+      const interval = setInterval(() => setExportProgress((p) => Math.min(95, p + 10)), 300)
+      const resp = await api.exportRelatorio(formato as any)
+      clearInterval(interval)
+      setExportProgress(100)
+      setIsGenerating(false)
+      setShowSuccess(true)
+      if (resp?.url) window.open(resp.url, '_blank')
+      setTimeout(() => setShowSuccess(false), 3000)
+    } catch {
+      setIsGenerating(false)
+    }
   }
 
-  const handleScheduleReport = () => {
+  const handleScheduleReport = async () => {
     setIsGenerating(true)
     setExportProgress(0)
-
-    // Simulando o progresso do agendamento
-    const interval = setInterval(() => {
-      setExportProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          setIsGenerating(false)
-          setShowSuccess(true)
-
-          // Fechar a mensagem de sucesso após 3 segundos
-          setTimeout(() => {
-            setShowSuccess(false)
-          }, 3000)
-          return 100
-        }
-        return prev + 10
-      })
-    }, 300)
+    try {
+      const interval = setInterval(() => setExportProgress((p) => Math.min(95, p + 10)), 300)
+      await new Promise((r) => setTimeout(r, 2000))
+      clearInterval(interval)
+      setExportProgress(100)
+      setIsGenerating(false)
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 3000)
+    } catch {
+      setIsGenerating(false)
+    }
   }
 
   const getSectionIcon = (section) => {

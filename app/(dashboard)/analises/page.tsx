@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -53,6 +54,7 @@ import {
 } from "recharts"
 import { motion, AnimatePresence } from "framer-motion"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { TendenciaData, ComparativaData } from "@/types"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
@@ -169,10 +171,12 @@ const COLORS = ["#ec0000", "#737373", "#4ade80", "#60a5fa", "#facc15"]
 
 export default function AnalisesPage() {
   const [isLoading, setIsLoading] = useState(true)
+  const [trendSeries, setTrendSeries] = useState<{ name: string; points: { t: string; v: number }[] }[] | null>(null)
+  const [comparativa, setComparativa] = useState<{ setor: string; indicadores: { nome: string; empresa: number; mediaSetor: number }[] } | null>(null)
   const [visualizacaoGrafico, setVisualizacaoGrafico] = useState("barras")
   const [periodoSelecionado, setPeriodoSelecionado] = useState("30d")
   const [showFullDetails, setShowFullDetails] = useState(false)
-  const [metricaSelecionada, setMetricaSelecionada] = useState(null)
+  const [metricaSelecionada, setMetricaSelecionada] = useState<any>(null)
   const [isExporting, setIsExporting] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(100)
   const [showLegend, setShowLegend] = useState(true)
@@ -181,7 +185,7 @@ export default function AnalisesPage() {
   const [showProjections, setShowProjections] = useState(true)
   const [confidenceInterval, setConfidenceInterval] = useState(80)
   const [selectedNode, setSelectedNode] = useState(null)
-  const [highlightedNodes, setHighlightedNodes] = useState([])
+  const [highlightedNodes, setHighlightedNodes] = useState<string[]>([])
   const [networkLayout, setNetworkLayout] = useState("force")
   const [showTooltips, setShowTooltips] = useState(true)
   const [animationSpeed, setAnimationSpeed] = useState(1000)
@@ -191,11 +195,21 @@ export default function AnalisesPage() {
   const refreshTimerRef = useRef(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-
-    return () => clearTimeout(timer)
+    let mounted = true
+    ;(async () => {
+      try {
+        const [t, c] = await Promise.all([
+          api.getAnalisesTendencias(),
+          api.getAnalisesComparativa()
+        ])
+        if (!mounted) return
+        setTrendSeries(t.series)
+        setComparativa(c)
+      } finally {
+        if (mounted) setIsLoading(false)
+      }
+    })()
+    return () => { mounted = false }
   }, [])
 
   // Simulação de atualização de dados em tempo real
@@ -217,7 +231,7 @@ export default function AnalisesPage() {
     }
   }, [refreshInterval])
 
-  const handlePeriodChange = (period) => {
+  const handlePeriodChange = (period: string) => {
     setPeriodoSelecionado(period)
     // Aqui seria implementada a lógica para atualizar os dados com base no período
   }
@@ -239,17 +253,17 @@ export default function AnalisesPage() {
     }, 2000)
   }
 
-  const handleMetricaClick = (metrica) => {
+  const handleMetricaClick = (metrica: string) => {
     setMetricaSelecionada(metrica)
     setShowFullDetails(true)
   }
 
-  const handleNodeClick = (node) => {
+  const handleNodeClick = (node: any) => {
     setSelectedNode(node)
     setHighlightedNodes([node.id])
   }
 
-  const handleZoomChange = (newZoom) => {
+  const handleZoomChange = (newZoom: number) => {
     setZoomLevel(newZoom[0])
   }
 
@@ -264,6 +278,32 @@ export default function AnalisesPage() {
       setDataUpdateTime(new Date())
       setIsLoading(false)
     }, 1000)
+  }
+
+  // Constrói dados de tendência (Receita/Despesa) a partir da API
+  const buildTrendData = (series: { name: string; points: { t: string; v: number }[] }[]) => {
+    const map = new Map<string, any>()
+    for (const s of series) {
+      for (const p of s.points) {
+        const key = p.t
+        if (!map.has(key)) map.set(key, { mes: key })
+        const row = map.get(key)
+        if (s.name.toLowerCase().includes('receita')) {
+          row.atual = p.v
+          row.projetado = undefined
+        } else if (s.name.toLowerCase().includes('despesa')) {
+          row.despesaAtual = p.v
+          row.despesaProjetado = undefined
+        }
+      }
+    }
+    return Array.from(map.values())
+  }
+
+  // Constrói dados do radar a partir da comparativa
+  const buildRadarData = (c?: { setor: string; indicadores: { nome: string; empresa: number; mediaSetor: number }[] }) => {
+    if (!c) return undefined
+    return c.indicadores.map(i => ({ subject: i.nome, A: i.empresa, B: i.mediaSetor, fullMark: 100 }))
   }
 
   return (
@@ -414,7 +454,7 @@ export default function AnalisesPage() {
                           cx="50%"
                           cy="50%"
                           labelLine={true}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          label={({ name, percent }: any) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
@@ -558,7 +598,7 @@ export default function AnalisesPage() {
                           cx="50%"
                           cy="50%"
                           labelLine={true}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          label={({ name, percent }: any) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
                           outerRadius={80}
                           fill="#8884d8"
                           dataKey="value"
@@ -667,7 +707,7 @@ export default function AnalisesPage() {
                         name="Entradas"
                         fill="#4ade80"
                         animationDuration={animationSpeed}
-                        onClick={(data) =>
+                        onClick={(data: any) =>
                           handleMetricaClick({
                             type: "fluxo",
                             category: "entradas",
@@ -682,7 +722,7 @@ export default function AnalisesPage() {
                         name="Saídas"
                         fill="#f87171"
                         animationDuration={animationSpeed}
-                        onClick={(data) =>
+                        onClick={(data: any) =>
                           handleMetricaClick({ type: "fluxo", category: "saidas", month: data.mes, value: data.saidas })
                         }
                         style={{ cursor: "pointer" }}
@@ -700,8 +740,8 @@ export default function AnalisesPage() {
                             handleMetricaClick({
                               type: "fluxo",
                               category: "saldo",
-                              month: data.payload.mes,
-                              value: data.payload.saldo,
+                              month: (data as any).payload.mes,
+                              value: (data as any).payload.saldo,
                             }),
                         }}
                         animationDuration={animationSpeed}
@@ -1414,7 +1454,7 @@ export default function AnalisesPage() {
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
-                      data={[
+                      data={trendSeries ? buildTrendData(trendSeries) : [
                         ...tendenciaReceitas,
                         ...tendenciaDespesas.map((item) => ({
                           ...item,
@@ -1675,7 +1715,7 @@ export default function AnalisesPage() {
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart outerRadius={90} data={radarData}>
+                      <RadarChart outerRadius={90} data={buildRadarData(comparativa) || radarData}>
                         <PolarGrid />
                         <PolarAngleAxis dataKey="subject" />
                         <PolarRadiusAxis angle={30} domain={[0, 150]} />

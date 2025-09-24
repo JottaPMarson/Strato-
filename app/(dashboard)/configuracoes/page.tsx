@@ -28,6 +28,7 @@ import {
   Accessibility,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { api } from "@/lib/api"
 import { motion } from "framer-motion"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Slider } from "@/components/ui/slider"
@@ -52,19 +53,18 @@ export default function ConfiguracoesPage() {
   const [screenReader, setScreenReader] = useState(false)
   const [colorBlindMode, setColorBlindMode] = useState("none")
 
-  const handleSaveSettings = () => {
-    // Simulando salvamento
+  const handleSaveSettings = async () => {
     setSaveSuccess(false)
     setSaveError(false)
-
-    setTimeout(() => {
+    try {
+      const current = await api.getConfiguracoes()
+      const updated = await api.updateConfiguracoes({ notifications: notificacoesApp })
       setSaveSuccess(true)
-
-      // Esconder a mensagem de sucesso após 3 segundos
-      setTimeout(() => {
-        setSaveSuccess(false)
-      }, 3000)
-    }, 1000)
+      setTimeout(() => setSaveSuccess(false), 3000)
+    } catch (e) {
+      setSaveError(true)
+      setTimeout(() => setSaveError(false), 3000)
+    }
   }
 
   const handleLogout = () => {

@@ -1,0 +1,42 @@
+npm error code ERESOLVE
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: vaul@0.9.9
+npm error Found: react@19.1.1
+npm error node_modules/react
+npm error   react@"^19" from the root project
+npm error   peer react@">=16.8.0" from @floating-ui/react-dom@2.1.6
+npm error   node_modules/@floating-ui/react-dom
+npm error     @floating-ui/react-dom@"^2.0.0" from @radix-ui/react-popper@1.2.8
+npm error     node_modules/@radix-ui/react-dropdown-menu/node_modules/@radix-ui/react-popper
+npm error       @radix-ui/react-popper@"1.2.8" from @radix-ui/react-menu@2.1.16
+npm error       node_modules/@radix-ui/react-dropdown-menu/node_modules/@radix-ui/react-menu
+npm error         @radix-ui/react-menu@"2.1.16" from @radix-ui/react-dropdown-menu@2.1.16
+npm error         node_modules/@radix-ui/react-dropdown-menu
+npm error     @floating-ui/react-dom@"^2.0.0" from @radix-ui/react-popper@1.2.8
+npm error     node_modules/@radix-ui/react-popover/node_modules/@radix-ui/react-popper
+npm error       @radix-ui/react-popper@"1.2.8" from @radix-ui/react-popover@1.1.15
+npm error       node_modules/@radix-ui/react-popover
+npm error         @radix-ui/react-popover@"latest" from the root project
+npm error     3 more (@radix-ui/react-popper, @radix-ui/react-popper, @radix-ui/react-popper)
+npm error   209 more (@radix-ui/react-accordion, ...)
+npm error
+npm error Could not resolve dependency:
+npm error peer react@"^16.8 || ^17.0 || ^18.0" from vaul@0.9.9
+npm error node_modules/vaul
+npm error   vaul@"^0.9.6" from the root project
+npm error
+npm error Conflicting peer dependency: react@18.3.1
+npm error node_modules/react
+npm error   peer react@"^16.8 || ^17.0 || ^18.0" from vaul@0.9.9
+npm error   node_modules/vaul
+npm error     vaul@"^0.9.6" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error /home/joaopedro/.npm/_logs/2025-09-24T16_35_39_696Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /home/joaopedro/.npm/_logs/2025-09-24T16_35_39_696Z-debug-0.log

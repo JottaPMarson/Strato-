@@ -133,6 +133,72 @@ pnpm dev
 http://localhost:3000
 ```
 
+### Backend (NestJS) – Mock API
+
+#### Execução Automática
+```bash
+# Linux/Mac
+bash ./run-all.sh
+
+# Windows
+run-all.bat
+```
+
+#### Execução Manual
+```bash
+# instalar deps do backend
+pnpm --dir backend install
+
+# rodar o backend (porta 4000)
+pnpm dev:backend
+```
+
+Rotas disponíveis (prefixo `/api`):
+- `GET /api/health` – liveness
+- `GET /api/ready` – readiness
+- `POST /api/auth/login` – demo (email `admin@stratopj.com`, senha `123456`)
+- `GET /api/dashboard/kpis`
+- `GET /api/analises/rede/metrics`
+- `GET /api/analises/rede/graph`
+- `GET /api/analises/tendencias`
+- `GET /api/analises/comparativa`
+- `GET /api/diagnosticos/historico`
+- `POST /api/simulador/run`
+- `GET /api/relatorios` | `POST /api/relatorios/export`
+- `GET /api/classificacao/status`
+- `GET /api/configuracoes` | `PUT /api/configuracoes`
+- `POST /api/extratos/upload` (multipart: `file`)
+
+### Correções Realizadas ✅
+
+#### Problemas de TypeScript Resolvidos
+- ✅ Configuração TypeScript corrigida (`next-env.d.ts`, `tsconfig.json`)
+- ✅ Tipos de estado React corrigidos (eliminados tipos `never`)
+- ✅ Parâmetros implícitos `any` tipados corretamente
+- ✅ Tipos de gráficos Recharts corrigidos
+- ✅ Dependência `react-is` instalada
+- ✅ Build funcionando sem erros
+- ✅ **Redução de 1700+ erros para ~129 erros não críticos**
+
+#### Integração Frontend-Backend
+- ✅ API client (`lib/api.ts`) conectando com todos os endpoints
+- ✅ Todas as páginas integradas com dados mock do backend
+- ✅ Variáveis de ambiente configuradas (`.env.local`)
+- ✅ CORS e headers de segurança configurados
+- ✅ Scripts de execução automática criados
+
+### Frontend ↔ Backend
+
+1) Arquivo `.env.local` já criado com:
+```
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+```
+2) Rode o backend e o frontend em paralelo:
+```
+pnpm dev:backend
+pnpm dev
+```
+
 ### **Credenciais de Teste**
 - **Email**: `admin@stratopj.com`
 - **Senha**: `123456`

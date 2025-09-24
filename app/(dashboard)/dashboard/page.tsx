@@ -49,7 +49,9 @@ import {
 } from "recharts"
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
+import { api, formatCurrencyBRL } from "@/lib/api"
 import Link from "next/link"
+import { KPIData, DiagnosticoItem } from "@/types"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -131,47 +133,8 @@ const CustomTooltip = ({ active, payload, label, formatter }) => {
 }
 
 // Histórico de diagnósticos
-const diagnosticHistory = [
-  {
-    date: "Abril 2025",
-    stage: "Expansão",
-    score: 68,
-    revenue: 64000,
-    expenses: 42000,
-    metrics: {
-      marginProfit: 34.4,
-      roi: 22.8,
-      liquidity: 1.8,
-      growthRate: 12.0,
-    },
-  },
-  {
-    date: "Março 2025",
-    stage: "Expansão",
-    score: 65,
-    revenue: 58000,
-    expenses: 40000,
-    metrics: {
-      marginProfit: 31.0,
-      roi: 20.5,
-      liquidity: 1.7,
-      growthRate: 10.5,
-    },
-  },
-  {
-    date: "Fevereiro 2025",
-    stage: "Início",
-    score: 48,
-    revenue: 52000,
-    expenses: 38000,
-    metrics: {
-      marginProfit: 26.9,
-      roi: 18.2,
-      liquidity: 1.5,
-      growthRate: 8.3,
-    },
-  },
-]
+// carregado do backend (diagnósticos)
+let diagnosticHistory: any[] = []
 
 // Componente para o card de estágio da empresa
 function EstagioEmpresaCard() {
@@ -422,17 +385,27 @@ function DiagnosticHistoryCard() {
 export default function DashboardPage() {
   const [periodoGrafico, setPeriodoGrafico] = useState("6m")
   const [isLoading, setIsLoading] = useState(true)
+  const [kpis, setKpis] = useState<{ revenue: number; cashFlow: number; roi: number; alerts: number } | null>(null)
   const [periodoFiltro, setPeriodoFiltro] = useState("mes")
   const [activeIndex, setActiveIndex] = useState(0)
   const [hoveredBar, setHoveredBar] = useState(null)
   const [isExporting, setIsExporting] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
-
-    return () => clearTimeout(timer)
+    let mounted = true
+    ;(async () => {
+      try {
+        const data = await api.getDashboardKpis()
+        if (mounted) setKpis({ revenue: data.revenue, cashFlow: data.cashFlow, roi: data.roi, alerts: data.alerts })
+      } catch {
+        // fallback: mantém mocks locais
+      } finally {
+        if (mounted) setIsLoading(false)
+      }
+    })()
+    return () => {
+      mounted = false
+    }
   }, [])
 
   // Filtrar dados com base no período selecionado
@@ -602,33 +575,33 @@ export default function DashboardPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <KpiCard
               title="Receita Total"
-              value="R$ 64.000,00"
-              change="+12% em relação ao mês anterior"
+              value={kpis ? formatCurrencyBRL(kpis.revenue) : "R$ 64.000,00"}
+              change="vs. período"
               icon={<TrendingUp className="h-4 w-4 text-green-500" />}
               borderColor="border-l-green-500"
               changeColor="text-green-500"
             />
             <KpiCard
-              title="Despesa Total"
-              value="R$ 42.000,00"
-              change="-7% em relação ao mês anterior"
+              title="Fluxo de Caixa"
+              value={kpis ? formatCurrencyBRL(kpis.cashFlow) : "R$ 42.000,00"}
+              change="vs. período"
               icon={<TrendingDown className="h-4 w-4 text-red-500" />}
               borderColor="border-l-red-500"
               changeColor="text-red-500"
               hasNotification={true}
             />
             <KpiCard
-              title="Saldo Atual"
-              value="R$ 22.000,00"
-              change="+69% em relação ao mês anterior"
-              icon={<ArrowUpRight className="h-4 w-4 text-blue-500" />}
-              borderColor="border-l-blue-500"
-              changeColor="text-blue-500"
+              title="Alertas"
+              value={kpis ? String(kpis.alerts) : "3"}
+              change="ativos"
+              icon={<AlertCircle className="h-4 w-4 text-amber-500" />}
+              borderColor="border-l-amber-500"
+              changeColor="text-amber-500"
             />
             <KpiCard
               title="ROI"
-              value="18.5%"
-              change="+2.3% em relação ao mês anterior"
+              value={kpis ? `${(kpis.roi * 100).toFixed(1)}%` : "18.5%"}
+              change="vs. período"
               icon={<Percent className="h-4 w-4 text-purple-500" />}
               borderColor="border-l-purple-500"
               changeColor="text-purple-500"

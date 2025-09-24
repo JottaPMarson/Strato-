@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Lock, Mail, Loader2, AlertCircle, Info } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { api } from "@/lib/api"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -69,24 +70,15 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // Simulando autenticação
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      // Simulando erro de autenticação para demonstração
-      if (email === "erro@teste.com") {
+      const result = await api.login(email, password)
+      if (result.error || !result.token) {
         setError("Credenciais inválidas. Verifique seu email e senha.")
         setIsLoading(false)
         return
       }
-
-      // Armazenar informações do usuário no localStorage se "lembrar de mim" estiver marcado
-      if (rememberMe) {
-        localStorage.setItem("userEmail", email)
-      } else {
-        localStorage.removeItem("userEmail")
-      }
-
-      // Redirecionar para o dashboard após login bem-sucedido
+      localStorage.setItem("authToken", result.token)
+      if (rememberMe) localStorage.setItem("userEmail", email)
+      else localStorage.removeItem("userEmail")
       router.push("/dashboard")
     } catch (err) {
       console.error("Erro ao fazer login:", err)

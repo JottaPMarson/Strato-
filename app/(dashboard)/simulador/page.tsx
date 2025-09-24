@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { api } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -25,6 +26,7 @@ import {
   ReferenceLine,
 } from "recharts"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { SimulacaoResultado, SimulacaoComparacao, CenarioSalvo } from "@/types"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { motion } from "framer-motion"
 import { Input } from "@/components/ui/input"
@@ -46,18 +48,18 @@ export default function SimuladorPage() {
   const [taxaJuros, setTaxaJuros] = useState(12)
   const [periodo, setPeriodo] = useState(12)
   const [cenarioAtivo, setCenarioAtivo] = useState("personalizado")
-  const [cenariosSalvos, setCenariosSalvos] = useState([])
+  const [cenariosSalvos, setCenariosSalvos] = useState<CenarioSalvo[]>([])
   const [comparandoCenarios, setComparandoCenarios] = useState(false)
   const [saldoFinal, setSaldoFinal] = useState(0)
   const [crescimentoPercentual, setCrescimentoPercentual] = useState("0")
-  const [simulacaoAnterior, setSimulacaoAnterior] = useState(null)
+  const [simulacaoAnterior, setSimulacaoAnterior] = useState<SimulacaoResultado | null>(null)
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [nomeCenario, setNomeCenario] = useState("")
   const [descricaoCenario, setDescricaoCenario] = useState("")
   const [taxaCrescimentoReceita, setTaxaCrescimentoReceita] = useState(2)
   const [taxaCrescimentoDespesa, setTaxaCrescimentoDespesa] = useState(1.5)
   const [showImpactoDialog, setShowImpactoDialog] = useState(false)
-  const [impactoSimulacao, setImpactoSimulacao] = useState(null)
+  const [impactoSimulacao, setImpactoSimulacao] = useState<SimulacaoComparacao | null>(null)
   const [isSimulando, setIsSimulando] = useState(false)
 
   // Referência para o gráfico
@@ -250,7 +252,7 @@ export default function SimuladorPage() {
   }
 
   // Aplicar simulação
-  const aplicarSimulacao = () => {
+  const aplicarSimulacao = async () => {
     setIsSimulando(true)
 
     // Guardar simulação anterior para comparação
@@ -265,8 +267,8 @@ export default function SimuladorPage() {
       projecao: [...projecaoData],
     })
 
-    // Calcular impacto da simulação
-    setTimeout(() => {
+    try {
+      const result = await api.runSimulador({ investimento, receita, custo: despesa })
       const novaProjecao = calcularProjecao(
         receita,
         despesa,
@@ -276,18 +278,17 @@ export default function SimuladorPage() {
         taxaCrescimentoReceita,
         taxaCrescimentoDespesa,
       )
-
       const impacto = {
-        saldoFinalDiferenca: saldoFinal - (simulacaoAnterior?.saldoFinal || 0),
+        saldoFinalDiferenca: result.lucro - (simulacaoAnterior?.saldoFinal || 0),
         crescimentoDiferenca: Number(crescimentoPercentual) - (Number(simulacaoAnterior?.crescimentoPercentual) || 0),
         mesesPositivos: novaProjecao.filter((mes) => mes.saldo > 0).length,
         retornoInvestimentoTotal: novaProjecao.reduce((acc, mes) => acc + mes.retorno, 0),
       }
-
       setImpactoSimulacao(impacto)
       setShowImpactoDialog(true)
+    } finally {
       setIsSimulando(false)
-    }, 1500)
+    }
   }
 
   // Carregar cenário salvo

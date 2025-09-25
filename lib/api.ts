@@ -27,10 +27,33 @@ export const api = {
     'POST',
     { email, password }
   ),
-  getDashboardKpis: () => request<{ revenue: number; cashFlow: number; roi: number; alerts: number; period: { from: string; to: string } }>(
-    '/dashboard/kpis',
+  getDistribuicao: () => request<{ items: Array<{ name: string; vendas: number; servicos: number; assinaturas: number }> }>(
+    '/dashboard/distribuicao',
     'GET'
   ),
+  getSaldoTrend: () => request<{ items: Array<{ name: string; saldo: number | null; projecao: number | null }> }>(
+    '/dashboard/saldo-trend',
+    'GET'
+  ),
+  getMonthStats: () =>
+    request<{
+      customersActive: number
+      leads: number
+      conversionRate: number
+      orders: number
+      avgTicket: number
+      revenueMonth: number
+      paymentAvgDays: number
+      reference: string
+    }>(
+      '/dashboard/stats-month',
+      'GET'
+    ),
+  getDashboardKpis: (period?: 'mes' | 'trimestre' | 'semestre' | 'ano') =>
+    request<{ revenue: number; cashFlow: number; roi: number; alerts: number; customersActive: number; avgTicket: number; conversionRate: number; period: { from: string; to: string } }>(
+      `/dashboard/kpis${period ? `?period=${period}` : ''}`,
+      'GET'
+    ),
   // Análises
   getAnaliseRedeMetrics: () => request<{ nodes: number; edges: number; density: number; avgDegree: number; clusteringCoeff: number }>(
     '/analises/rede/metrics',

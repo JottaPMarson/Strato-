@@ -20,6 +20,30 @@ export default function DashboardLayout({
     setMounted(true)
   }, [])
 
+  // Handler global para fechar/destravar overlays em caso de travamento
+  useEffect(() => {
+    function handleGlobalEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return
+
+      // 1) Fechar/remover overlays de preview/export (se existirem)
+      const overlays = document.querySelectorAll<HTMLElement>(
+        ".fixed.inset-0, .backdrop-blur-sm"
+      )
+      overlays.forEach((el) => {
+        // Tenta ocultar sem desmontar nós React
+        el.style.display = "none"
+        el.style.pointerEvents = "none"
+      })
+
+      // 2) Reabilitar interações globais caso algum estilo tenha bloqueado
+      document.body.style.pointerEvents = "auto"
+      document.body.style.overflow = "auto"
+    }
+
+    window.addEventListener("keydown", handleGlobalEscape)
+    return () => window.removeEventListener("keydown", handleGlobalEscape)
+  }, [])
+
   if (!mounted) {
     return null
   }

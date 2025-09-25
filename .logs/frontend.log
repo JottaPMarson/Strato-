@@ -38,5 +38,5 @@ npm error to accept an incorrect (and potentially broken) dependency resolution.
 npm error
 npm error
 npm error For a full report see:
-npm error /home/joaopedro/.npm/_logs/2025-09-24T16_35_39_696Z-eresolve-report.txt
-npm error A complete log of this run can be found in: /home/joaopedro/.npm/_logs/2025-09-24T16_35_39_696Z-debug-0.log
+npm error /home/joaopedro/.npm/_logs/2025-09-24T17_56_52_395Z-eresolve-report.txt
+npm error A complete log of this run can be found in: /home/joaopedro/.npm/_logs/2025-09-24T17_56_52_395Z-debug-0.log

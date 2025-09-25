@@ -1,370 +1,174 @@
-# 📊 StratoPJ - Sistema de Diagnóstico Financeiro
+## 📊 StratoPJ — Sistema de Diagnóstico Financeiro
 
-<div align="center">
+### Sobre o Projeto
+O StratoPJ é uma aplicação full‑stack (Next.js + NestJS) criada para diagnóstico e análise financeira, com recursos de visualização, simulação de cenários e relatórios. A arquitetura é modular e documentada em `docs/` com diagramas Mermaid e guias de desenvolvimento, deploy e API.
 
-![StratoPJ](https://img.shields.io/badge/StratoPJ-Sprint%20Acadêmico-ec0000?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K)
-
-**Sistema de Diagnóstico Financeiro e Análise de Redes para Pessoas Jurídicas**
-
-*Sprint Acadêmico - Projeto de Dashboard Financeiro Inteligente*
-
-[![Next.js](https://img.shields.io/badge/Next.js-15.2.4-black?logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.4.17-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
-
-[🚀 Demo Live](#) • [📖 Documentação](README-LOCAL.md) • [🐛 Reportar Bug](issues)
-
-</div>
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS, shadcn/ui, Recharts
+- **Backend**: NestJS (Node.js 22 LTS), módulos por domínio, CORS/Helmet, prefixo `api`
+- **Documentação**: `docs/` com arquitetura, API, desenvolvimento e deploy
 
 ---
 
-## 🎓 Sobre o Projeto
+## 🚀 Como Executar (Dev)
 
-O **StratoPJ** é um projeto desenvolvido como **sprint acadêmico** para criar uma solução completa de diagnóstico financeiro empresarial. A plataforma combina análise de dados, visualizações interativas e inteligência artificial para fornecer insights financeiros estratégicos para pessoas jurídicas.
+### Pré‑requisitos
+- Node.js 22.x LTS
+- npm (ou pnpm)
 
-### 🎯 Objetivos Acadêmicos
-- Aplicar conceitos de **desenvolvimento web moderno**
-- Implementar **dashboard interativo** com métricas em tempo real
-- Praticar **arquitetura de software** escalável
-- Desenvolver **UX/UI** focada em dados financeiros
-- Integrar **bibliotecas modernas** do ecossistema React
-
----
-
-## ✨ Funcionalidades Principais
-
-### 📊 **Dashboard Financeiro**
-- Métricas KPI em tempo real (Receita, ROI, Fluxo de Caixa)
-- Gráficos interativos com Recharts
-- Classificação automática do estágio empresarial
-- Sistema de alertas e notificações
-
-### 🔍 **Análises Avançadas**
-- **Análise de Redes**: Visualização de relacionamentos financeiros
-- **Análise Comparativa**: Benchmarking setorial
-- **Tendências Temporais**: Identificação de padrões
-- **Histórico de Diagnósticos**: Evolução da empresa
-
-### 🎮 **Simulador de Cenários**
-- Projeções financeiras dinâmicas
-- Análise de sensibilidade
-- Simulação de investimentos
-- Otimização de recursos
-
-### 📈 **Relatórios Inteligentes**
-- Relatórios personalizáveis
-- Exportação em múltiplos formatos
-- Insights automatizados
-- Recomendações estratégicas
-
-### 📱 **Interface Moderna**
-- Design system baseado em shadcn/ui
-- Responsivo para todos os dispositivos
-- Tema claro/escuro
-- Animações suaves com Framer Motion
-
----
-
-## 🛠️ Stack Tecnológica
-
-### **Frontend**
-| Tecnologia | Versão | Descrição |
-|------------|--------|-----------|
-| **Next.js** | 15.2.4 | Framework React com App Router |
-| **React** | 19 | Biblioteca de interface |
-| **TypeScript** | 5.x | Tipagem estática |
-| **Tailwind CSS** | 3.4.17 | Framework CSS utilitário |
-
-### **UI/UX**
-| Biblioteca | Uso |
-|------------|-----|
-| **shadcn/ui** | Componentes base |
-| **Radix UI** | Primitivos acessíveis |
-| **Lucide React** | Ícones |
-| **Framer Motion** | Animações |
-| **Recharts** | Gráficos e visualizações |
-
-### **Desenvolvimento**
-| Ferramenta | Função |
-|------------|---------|
-| **pnpm** | Gerenciador de pacotes |
-| **ESLint** | Linting de código |
-| **Zod** | Validação de schemas |
-| **date-fns** | Manipulação de datas |
-
----
-
-## 🚀 Como Executar
-
-### **Início Rápido**
-
-#### Windows
-```cmd
-.\run-local.bat
-```
-
-#### macOS/Linux
+### Passos rápidos
+1) Instalar dependências
 ```bash
-./run-local.sh
+# Frontend
+npm install --legacy-peer-deps
+
+# Backend
+cd backend && npm install && cd ..
 ```
 
-### **Instalação Manual**
-
-1. **Clone o repositório**
+2) Subir os serviços (terminals separados)
 ```bash
-git clone https://github.com/lrafasouza/sprint.git
-cd sprint
+# Frontend (porta 3000)
+npm run dev
+
+# Backend (porta 4000)
+npm run dev:backend
 ```
 
-2. **Instale as dependências**
-```bash
-npm install -g pnpm
-pnpm install
-```
+3) Acessos
+- Frontend: `http://localhost:3000`
+- Backend API: `http://localhost:4000/api`
 
-3. **Execute o projeto**
-```bash
-pnpm dev
-```
-
-4. **Acesse no navegador**
-```
-http://localhost:3000
-```
-
-### Backend (NestJS) – Mock API
-
-#### Execução Automática
-```bash
-# Linux/Mac
-bash ./run-all.sh
-
-# Windows
-run-all.bat
-```
-
-#### Execução Manual
-```bash
-# instalar deps do backend
-pnpm --dir backend install
-
-# rodar o backend (porta 4000)
-pnpm dev:backend
-```
-
-Rotas disponíveis (prefixo `/api`):
-- `GET /api/health` – liveness
-- `GET /api/ready` – readiness
-- `POST /api/auth/login` – demo (email `admin@stratopj.com`, senha `123456`)
-- `GET /api/dashboard/kpis`
-- `GET /api/analises/rede/metrics`
-- `GET /api/analises/rede/graph`
-- `GET /api/analises/tendencias`
-- `GET /api/analises/comparativa`
-- `GET /api/diagnosticos/historico`
-- `POST /api/simulador/run`
-- `GET /api/relatorios` | `POST /api/relatorios/export`
-- `GET /api/classificacao/status`
-- `GET /api/configuracoes` | `PUT /api/configuracoes`
-- `POST /api/extratos/upload` (multipart: `file`)
-
-### Correções Realizadas ✅
-
-#### Problemas de TypeScript Resolvidos
-- ✅ Configuração TypeScript corrigida (`next-env.d.ts`, `tsconfig.json`)
-- ✅ Tipos de estado React corrigidos (eliminados tipos `never`)
-- ✅ Parâmetros implícitos `any` tipados corretamente
-- ✅ Tipos de gráficos Recharts corrigidos
-- ✅ Dependência `react-is` instalada
-- ✅ Build funcionando sem erros
-- ✅ **Redução de 1700+ erros para ~129 erros não críticos**
-
-#### Integração Frontend-Backend
-- ✅ API client (`lib/api.ts`) conectando com todos os endpoints
-- ✅ Todas as páginas integradas com dados mock do backend
-- ✅ Variáveis de ambiente configuradas (`.env.local`)
-- ✅ CORS e headers de segurança configurados
-- ✅ Scripts de execução automática criados
-
-### Frontend ↔ Backend
-
-1) Arquivo `.env.local` já criado com:
-```
+### Variáveis de ambiente
+Crie `.env.local` na raiz (frontend) e configure o backend conforme necessário:
+```env
+# Frontend
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
+NEXT_PUBLIC_APP_NAME=StratoPJ
+NEXT_PUBLIC_VERSION=1.0.0
+
+# Backend (backend/.env)
+PORT=4000
+NODE_ENV=development
+API_PREFIX=api
+CORS_ORIGIN=http://localhost:3000
 ```
-2) Rode o backend e o frontend em paralelo:
-```
-pnpm dev:backend
-pnpm dev
-```
 
-### **Credenciais de Teste**
-- **Email**: `admin@stratopj.com`
-- **Senha**: `123456`
-
-> 📝 **Nota**: Sistema com autenticação simulada para demonstração
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-sprint/
-├── 📁 app/                    # App Router (Next.js 15)
-│   ├── (auth)/               # Rotas de autenticação
-│   │   └── login/            # Página de login
-│   └── (dashboard)/          # Rotas do dashboard
-│       ├── dashboard/        # Dashboard principal
-│       ├── analises/         # Análises financeiras
-│       │   └── rede/         # Análise de redes
-│       ├── simulador/        # Simulador de cenários
-│       ├── relatorios/       # Relatórios
-│       └── configuracoes/    # Configurações
-├── 📁 components/            # Componentes React
-│   ├── ui/                   # Componentes base (shadcn/ui)
-│   ├── header.tsx            # Cabeçalho da aplicação
-│   ├── sidebar.tsx           # Menu lateral
-│   └── *.tsx                 # Componentes específicos
-├── 📁 lib/                   # Utilitários e configurações
-└── 📁 public/                # Assets estáticos
+### Scripts úteis
+```json
+{
+  "scripts": {
+    "dev": "next dev",                    
+    "dev:backend": "pnpm --dir backend dev",
+    "build": "next build",               
+    "build:backend": "pnpm --dir backend build",
+    "start": "next start",               
+    "start:backend": "pnpm --dir backend start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  }
+}
 ```
 
 ---
 
-## 🎨 Screenshots
+## 🔌 API (Visão Rápida)
+A documentação completa está em `docs/api/endpoints.md`. O backend usa prefixo global `api` (ver `backend/src/main.ts`).
 
-### Dashboard Principal
-> 📊 Visão geral das métricas financeiras com gráficos interativos
+- Health checks
+```http
+GET /api/health
+GET /api/ready
+```
 
-### Análise de Redes
-> 🔍 Visualização de relacionamentos e fluxos financeiros
+- Autenticação (exemplo)
+```http
+POST /api/auth/login
+Content-Type: application/json
 
-### Simulador de Cenários
-> 🎮 Interface para simulação de diferentes cenários financeiros
+{
+  "email": "admin@stratopj.com",
+  "password": "123456"
+}
+```
 
----
+- Análises, Simulador, Relatórios, Upload: ver `docs/api/endpoints.md` e `docs/api/schemas.md`.
 
-## 🎓 Conceitos Aplicados
-
-### **Desenvolvimento Web**
-- ✅ **App Router** (Next.js 15)
-- ✅ **Server Components** e **Client Components**
-- ✅ **TypeScript** para type safety
-- ✅ **Responsive Design**
-- ✅ **Performance Optimization**
-
-### **UI/UX Design**
-- ✅ **Design System** consistente
-- ✅ **Acessibilidade** (a11y)
-- ✅ **Dark/Light Mode**
-- ✅ **Micro-interactions**
-- ✅ **Data Visualization**
-
-### **Arquitetura**
-- ✅ **Component-Based Architecture**
-- ✅ **Custom Hooks**
-- ✅ **State Management**
-- ✅ **Code Splitting**
-- ✅ **Error Boundaries**
+Credenciais demo:
+- Email: `admin@stratopj.com`
+- Senha: `123456`
 
 ---
 
-## 📊 Funcionalidades por Página
+## 🏗️ Arquitetura (resumo)
+- Visão geral: `docs/architecture/overview.md`
+- Frontend: `docs/architecture/frontend.md`
+- Backend: `docs/architecture/backend.md`
+- Fluxo de dados: `docs/architecture/data-flow.md`
 
-| Página | Funcionalidades |
-|--------|----------------|
-| **Dashboard** | KPIs, gráficos, classificação empresarial, alertas |
-| **Análises** | Comparativas, redes, tendências, histórico |
-| **Simulador** | Cenários, projeções, otimizações |
-| **Relatórios** | Geração, filtros, exportação |
-| **Classificação** | Estágio da empresa, recomendações |
-| **Configurações** | Perfil, preferências, integrações |
+### Estrutura do repositório
+```text
+strato/
+├─ app/                      # Next.js (App Router)
+│  ├─ (auth)/                # Login, layout de auth
+│  └─ (dashboard)/           # Dashboard e módulos (analises, simulador, etc.)
+├─ backend/                  # NestJS API (src/modules/*, main.ts)
+├─ components/               # Componentes React (shadcn/ui e específicos)
+├─ docs/                     # Documentação técnica (arquitetura, API, deploy, dev)
+├─ lib/                      # Utilitários frontend (api.ts, utils.ts)
+├─ types/                    # Tipos globais TS
+├─ public/                   # Assets estáticos
+└─ scripts/                  # Scripts auxiliares
+```
 
----
-
-## 🤝 Desenvolvimento Acadêmico
-
-### **Aprendizados Principais**
-- Implementação de dashboards complexos com React
-- Integração de bibliotecas de visualização de dados
-- Arquitetura escalável com Next.js App Router
-- Design responsivo com Tailwind CSS
-- Gerenciamento de estado em aplicações React
-
-### **Desafios Superados**
-- Renderização de gráficos interativos
-- Performance em dashboards com muitos dados
-- TypeScript em projetos complexos
-- Sistema de roteamento avançado
-- Integração de múltiplas bibliotecas UI
-
-### **Técnicas Avançadas**
-- Server-side rendering com Next.js
-- Component composition patterns
-- Custom hooks para lógica reutilizável
-- Error boundaries para tratamento de erros
-- Code splitting para otimização
+Principais características técnicas:
+- CORS/Helmet, validação de entrada, rate‑limit (ver guia de deploy)
+- Métricas/health endpoints para observabilidade básica
+- Visualizações com Recharts e componentes shadcn/ui
 
 ---
 
-## 📚 Documentação Adicional
+## 📦 Build e Deploy
+Guia completo em `docs/deployment/setup.md` (Dockerfiles, docker‑compose, Nginx, AWS ECS/EC2, CI/CD com GitHub Actions).
 
-- 📖 **[Guia de Execução Local](README-LOCAL.md)** - Instruções detalhadas
-- 🔧 **[Scripts de Desenvolvimento](scripts/)** - Utilitários
-- 🎨 **[Guia de Estilo](docs/style-guide.md)** - Padrões de design
-- 🏗️ **[Arquitetura](docs/architecture.md)** - Estrutura técnica
+Passos básicos locais de produção:
+```bash
+# Frontend
+npm run build && npm run start
 
----
-
-## 🎯 Próximos Passos
-
-### **Melhorias Planejadas**
-- [ ] Integração com APIs reais de dados financeiros
-- [ ] Sistema de autenticação completo
-- [ ] Testes automatizados (Jest + Testing Library)
-- [ ] PWA (Progressive Web App)
-- [ ] Modo offline para visualizações
-
-### **Novas Funcionalidades**
-- [ ] Chatbot com IA para insights
-- [ ] Exportação avançada de relatórios
-- [ ] Integração com bancos (Open Banking)
-- [ ] Alertas por email/SMS
-- [ ] Dashboard mobile nativo
+# Backend
+cd backend && npm run build && npm run start:prod
+```
 
 ---
 
-## 👥 Contribuição
+## 💻 Desenvolvimento
+- Guia do desenvolvedor: `docs/development/getting-started.md`
+- Padrões de código, testes e ferramentas: `docs/README.md`
 
-### **Como Contribuir**
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit suas mudanças: `git commit -m 'Adiciona nova funcionalidade'`
-4. Push para a branch: `git push origin feature/nova-funcionalidade`
-5. Abra um Pull Request
+Dicas rápidas de troubleshooting:
+```bash
+# Reinstalar dependências (frontend)
+rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
 
-### **Reportar Problemas**
-- Use as [Issues](issues) para reportar bugs
-- Inclua screenshots quando possível
-- Descreva os passos para reproduzir
+# Backend não inicia
+cd backend && npm install && npm run dev:backend
 
----
-
-<div align="center">
-
-## 🎓 Projeto Acadêmico
-
-**Desenvolvido como sprint de aprendizado**
-
-*Aplicando conceitos modernos de desenvolvimento web*
+# Verificar health da API
+curl http://localhost:4000/api/health
+```
 
 ---
 
-[![Licença MIT](https://img.shields.io/badge/Licença-MIT-green.svg)](LICENSE)
-[![Status do Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](README.md)
-[![Versão](https://img.shields.io/badge/Versão-1.0.0-blue.svg)](package.json)
+## 🔒 Segurança e Boas Práticas
+- Headers de segurança (Helmet) e CORS restrito por ambiente
+- Inputs validados (backend) e sanitização no frontend
+- Nunca expor secrets no frontend; usar variáveis de ambiente e secret managers em produção
 
-**⭐ Se este projeto ajudou você, considere dar uma estrela!**
+---
 
-</div>
+## 📚 Referências Rápidas
+- Documentação geral: `docs/README.md`
+- API (endpoints e schemas): `docs/api/endpoints.md`, `docs/api/schemas.md`
+- Arquitetura (Mermaid): `docs/architecture/`
+- Deploy: `docs/deployment/setup.md`
+- Desenvolvimento: `docs/development/getting-started.md`

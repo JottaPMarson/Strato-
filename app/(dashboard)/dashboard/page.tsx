@@ -385,7 +385,23 @@ function DiagnosticHistoryCard() {
 export default function DashboardPage() {
   const [periodoGrafico, setPeriodoGrafico] = useState("6m")
   const [isLoading, setIsLoading] = useState(true)
-  const [kpis, setKpis] = useState<{ revenue: number; cashFlow: number; roi: number; alerts: number } | null>(null)
+  const [kpis, setKpis] = useState<{
+    revenue: number
+    cashFlow: number
+    roi: number
+    alerts: number
+    customersActive?: number
+    avgTicket?: number
+    conversionRate?: number
+  } | null>(null)
+  const [statsMonth, setStatsMonth] = useState<{
+    customersActive: number
+    conversionRate: number
+    avgTicket: number
+    paymentAvgDays: number
+  } | null>(null)
+  const [distribuicao, setDistribuicao] = useState<Array<{ name: string; vendas: number; servicos: number; assinaturas: number }>>([])
+  const [saldoTrend, setSaldoTrend] = useState<Array<{ name: string; saldo: number | null; projecao: number | null }>>([])
   const [periodoFiltro, setPeriodoFiltro] = useState("mes")
   const [activeIndex, setActiveIndex] = useState(0)
   const [hoveredBar, setHoveredBar] = useState(null)
@@ -395,8 +411,17 @@ export default function DashboardPage() {
     let mounted = true
     ;(async () => {
       try {
-        const data = await api.getDashboardKpis()
-        if (mounted) setKpis({ revenue: data.revenue, cashFlow: data.cashFlow, roi: data.roi, alerts: data.alerts })
+        const data = await api.getDashboardKpis(periodoFiltro as any)
+        if (mounted)
+          setKpis({
+            revenue: data.revenue,
+            cashFlow: data.cashFlow,
+            roi: data.roi,
+            alerts: data.alerts,
+            customersActive: data.customersActive,
+            avgTicket: data.avgTicket,
+            conversionRate: data.conversionRate,
+          })
       } catch {
         // fallback: mantém mocks locais
       } finally {
@@ -406,7 +431,48 @@ export default function DashboardPage() {
     return () => {
       mounted = false
     }
+  }, [periodoFiltro])
+
+  // Estatísticas do mês anterior (fixas, independentes do filtro rápido)
+  useEffect(() => {
+    let mounted = true
+    ;(async () => {
+      try {
+        const s = await api.getMonthStats()
+        if (mounted) setStatsMonth({
+          customersActive: s.customersActive,
+          conversionRate: s.conversionRate,
+          avgTicket: s.avgTicket,
+          paymentAvgDays: s.paymentAvgDays,
+        })
+      } catch {}
+    })()
+    return () => {
+      mounted = false
+    }
   }, [])
+
+  // Dados de gráficos alinhados ao mês corrente
+  useEffect(() => {
+    let mounted = true
+    ;(async () => {
+      try {
+        const d = await api.getDistribuicao()
+        const s = await api.getSaldoTrend()
+        if (mounted) {
+          setDistribuicao(d.items)
+          setSaldoTrend(s.items)
+        }
+      } catch {}
+    })()
+    return () => {
+      mounted = false
+    }
+  }, [])
+
+  // Observação: Filtros rápidos devem afetar apenas KPIs.
+  // O gráfico de "Evolução Financeira" possui seus próprios botões (3M/6M/12M)
+  // e não é alterado por periodoFiltro.
 
   // Filtrar dados com base no período selecionado
   const filteredData = () => {
@@ -800,10 +866,16 @@ export default function DashboardPage() {
                       <span className="text-sm font-medium">Margem de Lucro</span>
                       <TooltipInfo content="Lucro líquido dividido pela receita total" />
                     </div>
-                    <span className="font-medium text-green-600">34.4%</span>
+                    {(() => {
+                      const margin = kpis ? Math.max(0, Math.min(100, (kpis.cashFlow / (kpis.revenue || 1)) * 100)) : 34.4
+                      return <span className="font-medium text-green-600">{margin.toFixed(1)}%</span>
+                    })()}
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: "34.4%" }}></div>
+                    {(() => {
+                      const margin = kpis ? Math.max(0, Math.min(100, (kpis.cashFlow / (kpis.revenue || 1)) * 100)) : 34.4
+                      return <div className="bg-green-500 h-2 rounded-full" style={{ width: `${margin.toFixed(1)}%` }}></div>
+                    })()}
                   </div>
                 </div>
 
@@ -813,10 +885,16 @@ export default function DashboardPage() {
                       <span className="text-sm font-medium">ROI</span>
                       <TooltipInfo content="Retorno sobre investimento" />
                     </div>
-                    <span className="font-medium text-green-600">22.8%</span>
+                    {(() => {
+                      const roiPct = kpis ? Math.max(0, Math.min(100, kpis.roi * 100)) : 22.8
+                      return <span className="font-medium text-green-600">{roiPct.toFixed(1)}%</span>
+                    })()}
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: "22.8%" }}></div>
+                    {(() => {
+                      const roiPct = kpis ? Math.max(0, Math.min(100, kpis.roi * 100)) : 22.8
+                      return <div className="bg-green-500 h-2 rounded-full" style={{ width: `${roiPct.toFixed(1)}%` }}></div>
+                    })()}
                   </div>
                 </div>
 
@@ -859,7 +937,7 @@ export default function DashboardPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Clientes Ativos"
-              value="128"
+              value={statsMonth ? String(statsMonth.customersActive) : "128"}
               icon={{ component: Users, bgColor: "bg-blue-100", color: "text-blue-600" }}
               description="vs. mês anterior"
               trend="up"
@@ -867,7 +945,7 @@ export default function DashboardPage() {
             />
             <StatCard
               title="Ticket Médio"
-              value="R$ 1.250,00"
+              value={statsMonth ? formatCurrencyBRL(statsMonth.avgTicket) : "R$ 1.250,00"}
               icon={{ component: DollarSign, bgColor: "bg-green-100", color: "text-green-600" }}
               description="vs. mês anterior"
               trend="up"
@@ -875,7 +953,7 @@ export default function DashboardPage() {
             />
             <StatCard
               title="Taxa de Conversão"
-              value="24.8%"
+              value={statsMonth ? `${(statsMonth.conversionRate * 100).toFixed(1)}%` : "24.8%"}
               icon={{ component: Percent, bgColor: "bg-amber-100", color: "text-amber-600" }}
               description="vs. mês anterior"
               trend="down"
@@ -883,7 +961,7 @@ export default function DashboardPage() {
             />
             <StatCard
               title="Tempo Médio de Pagamento"
-              value="18 dias"
+              value={statsMonth ? `${statsMonth.paymentAvgDays} dias` : "18 dias"}
               icon={{ component: Clock, bgColor: "bg-purple-100", color: "text-purple-600" }}
               description="vs. mês anterior"
               trend="up"
@@ -943,11 +1021,7 @@ export default function DashboardPage() {
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
-                      data={[
-                        { name: "Abr", vendas: 30000, servicos: 25000, assinaturas: 8000 },
-                        { name: "Mai", vendas: 32000, servicos: 22000, assinaturas: 4000 },
-                        { name: "Jun", vendas: 35000, servicos: 20000, assinaturas: 9000 },
-                      ]}
+                      data={distribuicao}
                       margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                       onMouseMove={(state) => {
                         if (state && state.isTooltipActive) {
@@ -1008,14 +1082,7 @@ export default function DashboardPage() {
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
-                      data={[
-                        { name: "Abr", saldo: 23000, projecao: null },
-                        { name: "Mai", saldo: 13000, projecao: null },
-                        { name: "Jun", saldo: 22000, projecao: null },
-                        { name: "Jul", saldo: null, projecao: 25000 },
-                        { name: "Ago", saldo: null, projecao: 28000 },
-                        { name: "Set", saldo: null, projecao: 32000 },
-                      ]}
+                      data={saldoTrend}
                       margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -1066,7 +1133,7 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="font-medium">Fechamento Mensal</p>
-                    <p className="text-xs text-muted-foreground">30/05/2023</p>
+                    <p className="text-xs text-muted-foreground">30/09/2025</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors">
@@ -1075,7 +1142,7 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="font-medium">Reunião com Investidores</p>
-                    <p className="text-xs text-muted-foreground">05/06/2023</p>
+                    <p className="text-xs text-muted-foreground">05/10/2025</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors">
@@ -1084,7 +1151,7 @@ export default function DashboardPage() {
                   </div>
                   <div>
                     <p className="font-medium">Pagamento de Dividendos</p>
-                    <p className="text-xs text-muted-foreground">15/06/2023</p>
+                    <p className="text-xs text-muted-foreground">15/10/2025</p>
                   </div>
                 </div>
                 <Separator />

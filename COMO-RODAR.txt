@@ -3,73 +3,118 @@
 
 📋 INÍCIO RÁPIDO:
 
-Windows:
-  .\run-local.bat
+1. Frontend (porta 3000):
+   npm run dev
 
-macOS/Linux:
-  ./run-local.sh
+2. Backend (porta 4000):
+   # Sem pnpm. Use npm na pasta backend
+   npm --prefix backend install
+   npm --prefix backend run dev
 
-📍 URL: http://localhost:3000
-🔐 Login: qualquer@email.com
-🔑 Senha: 123456
+📍 URLs:
+• Frontend: http://localhost:3000
+• Backend: http://localhost:4000/api
+
+🔐 Login:
+• Email: admin@stratopj.com
+• Senha: 123456
 
 =======================================
 
 📦 PRÉ-REQUISITOS:
 • Node.js 18+ (https://nodejs.org)
-• Git (opcional)
+• npm ou pnpm
 
 =======================================
 
-🔧 INSTALAÇÃO MANUAL:
+🔧 INSTALAÇÃO:
 
-1. Instalar pnpm:
-   npm install -g pnpm
+1. Instalar dependências do frontend:
+   npm install --legacy-peer-deps
 
-2. Instalar dependências:
-   pnpm install
+2. Instalar dependências do backend:
+   npm --prefix backend install
 
-3. Iniciar desenvolvimento:
-   pnpm dev
+3. Iniciar frontend:
+   npm run dev
+
+4. Iniciar backend (em outro terminal):
+   npm --prefix backend run dev
 
 =======================================
 
-🛠️ COMANDOS ÚTEIS:
+🛠️ COMANDOS DISPONÍVEIS:
 
-Verificar saúde do projeto:
-  node scripts/dev-utils.js check
+Frontend:
+  npm run dev          # Iniciar frontend (porta 3000)
+  npm run build        # Build para produção
+  npm run start        # Iniciar produção
 
-Limpar cache:
-  node scripts/dev-utils.js clean
-
-Ver informações:
-  node scripts/dev-utils.js info
-
-Iniciar servidor:
-  pnpm dev
+Backend:
+  npm --prefix backend run dev      # Iniciar backend (porta 4000)
+  npm --prefix backend run build    # Build backend
+  npm --prefix backend run start    # Iniciar backend produção
 
 =======================================
 
 ❗ PROBLEMAS COMUNS:
 
 Porta 3000 ocupada:
-  pnpm dev --port 3001
+  npm run dev -- --port 3001
 
-Erro de dependências:
-  pnpm store prune
-  rm pnpm-lock.yaml
-  pnpm install
+Porta 4000 ocupada (backend):
+  # Matar processo na porta 4000
+  netstat -tlnp | grep :4000
+  kill -9 <PID>
+
+Erro de dependências frontend:
+  rm -rf node_modules package-lock.json
+  npm install --legacy-peer-deps
+
+Erro de dependências backend:
+  rm -rf backend/node_modules backend/package-lock.json
+  cd backend && npm install
+
+Backend não inicia:
+  # Verificar se as dependências estão instaladas
+  cd backend && npm install
+  npm run dev:backend
+
+Frontend não conecta com backend:
+  # Verificar se backend está rodando
+  curl http://localhost:4000/api/health
 
 Node.js não encontrado:
   Baixar em: https://nodejs.org
 
 =======================================
 
-📚 MAIS INFORMAÇÕES:
-  Veja: README-LOCAL.md
+📚 ENDPOINTS DO BACKEND:
+
+Autenticação:
+  POST /api/auth/login
+
+Dashboard:
+  GET /api/dashboard/kpis?period=mes|trimestre|semestre|ano
+
+Análises:
+  GET /api/analises/rede/metrics
+  GET /api/analises/rede/graph
+  GET /api/analises/tendencias
+  GET /api/analises/comparativa
+
+Outros:
+  GET /api/health
+  GET /api/diagnosticos/historico
+  POST /api/simulador/run
+  GET /api/classificacao/status
+  GET /api/configuracoes
+  POST /api/extratos/upload
+
+=======================================
 
 🆘 SUPORTE:
-  Documentação completa no arquivo README-LOCAL.md
+  Documentação completa no README.md
   
 =======================================
 StratoPJ v1.0.0 - Sistema de Diagnóstico Financeiro

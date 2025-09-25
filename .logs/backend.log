@@ -1,59 +1,48 @@
 
-up to date in 5s
+up to date in 3s
 
 > strato-backend@0.1.0 dev
 > ts-node-dev --respawn --transpile-only src/main.ts
 
-[INFO] 13:35:48 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.2)
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [NestFactory] Starting Nest application...
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] AppModule dependencies initialized +105ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] MulterModule dependencies initialized +5ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] HealthModule dependencies initialized +9ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] AuthModule dependencies initialized +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] DashboardModule dependencies initialized +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] AnalisesModule dependencies initialized +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] DiagnosticosModule dependencies initialized +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] SimuladorModule dependencies initialized +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] RelatoriosModule dependencies initialized +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] ClassificacaoModule dependencies initialized +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] ConfiguracoesModule dependencies initialized +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [InstanceLoader] ExtratosModule dependencies initialized +5ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] HealthController {/api}: +33ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/health, GET} route +13ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/ready, GET} route +3ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] AuthController {/api/auth}: +4ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/auth/login, POST} route +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] DashboardController {/api/dashboard}: +3ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/dashboard/kpis, GET} route +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] AnalisesController {/api/analises}: +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/analises/rede/metrics, GET} route +4ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/analises/rede/graph, GET} route +3ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/analises/tendencias, GET} route +4ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/analises/comparativa, GET} route +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] DiagnosticosController {/api/diagnosticos}: +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/diagnosticos/historico, GET} route +4ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] SimuladorController {/api/simulador}: +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/simulador/run, POST} route +5ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] RelatoriosController {/api/relatorios}: +2ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/relatorios, GET} route +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/relatorios/export, POST} route +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] ClassificacaoController {/api/classificacao}: +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/classificacao/status, GET} route +0ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] ConfiguracoesController {/api/configuracoes}: +1ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/configuracoes, GET} route +2ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/configuracoes, PUT} route +3ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RoutesResolver] ExtratosController {/api/extratos}: +4ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [RouterExplorer] Mapped {/api/extratos/upload, POST} route +10ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM     LOG [NestApplication] Nest application successfully started +19ms
-[Nest] 7469  - 09/24/2025, 1:35:56 PM   ERROR [NestApplication] Error: listen EADDRINUSE: address already in use :::4000 +9ms
-Error: listen EADDRINUSE: address already in use :::4000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at ExpressAdapter.listen (/home/joaopedro/CascadeProjects/strato/backend/node_modules/@nestjs/platform-express/adapters/express-adapter.js:95:32)
-    at /home/joaopedro/CascadeProjects/strato/backend/node_modules/@nestjs/core/nest-application.js:183:30
-    at new Promise (<anonymous>)
-    at NestApplication.listen (/home/joaopedro/CascadeProjects/strato/backend/node_modules/@nestjs/core/nest-application.js:173:16)
-    at processTicksAndRejections (node:internal/process/task_queues:105:5)
-    at bootstrap (/home/joaopedro/CascadeProjects/strato/backend/src/main.ts:15:3)
-[ERROR] 13:35:56 Error: listen EADDRINUSE: address already in use :::4000
+[INFO] 14:56:48 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.2)
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [NestFactory] Starting Nest application...
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] AppModule dependencies initialized +49ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] MulterModule dependencies initialized +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] HealthModule dependencies initialized +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] AuthModule dependencies initialized +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] DashboardModule dependencies initialized +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] AnalisesModule dependencies initialized +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] DiagnosticosModule dependencies initialized +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] SimuladorModule dependencies initialized +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] RelatoriosModule dependencies initialized +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] ClassificacaoModule dependencies initialized +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] ConfiguracoesModule dependencies initialized +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [InstanceLoader] ExtratosModule dependencies initialized +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] HealthController {/api}: +14ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/health, GET} route +17ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/ready, GET} route +3ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] AuthController {/api/auth}: +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/auth/login, POST} route +5ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] DashboardController {/api/dashboard}: +2ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/dashboard/kpis, GET} route +3ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] AnalisesController {/api/analises}: +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/analises/rede/metrics, GET} route +4ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/analises/rede/graph, GET} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/analises/tendencias, GET} route +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/analises/comparativa, GET} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] DiagnosticosController {/api/diagnosticos}: +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/diagnosticos/historico, GET} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] SimuladorController {/api/simulador}: +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/simulador/run, POST} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] RelatoriosController {/api/relatorios}: +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/relatorios, GET} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/relatorios/export, POST} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] ClassificacaoController {/api/classificacao}: +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/classificacao/status, GET} route +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] ConfiguracoesController {/api/configuracoes}: +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/configuracoes, GET} route +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/configuracoes, PUT} route +0ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RoutesResolver] ExtratosController {/api/extratos}: +1ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [RouterExplorer] Mapped {/api/extratos/upload, POST} route +2ms
+[Nest] 20268  - 09/24/2025, 2:56:51 PM     LOG [NestApplication] Nest application successfully started +6ms
+Backend listening on http://localhost:4000
